@@ -1,5 +1,4 @@
 import { createApp } from 'vue'
-
 import App from './App.vue'
 
 import axios from "axios";
@@ -13,7 +12,6 @@ const options = {
   confirmButtonColor: '#41b882',
   cancelButtonColor: '#ff7674'
 }
-
 app.use(VueSweetalert2, options);
 
 

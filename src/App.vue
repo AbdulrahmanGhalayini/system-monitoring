@@ -1,5 +1,5 @@
 <template>
-  <div id="global-loader" style="display: none;">
+  <div v-if="loaderFlage" id="global-loader" style="position: absolute; left: 0; right: 0; text-align: center; top: 37%; margin: 0 auto;">
     <img :src="LOADER" alt="loader">
   </div>
   <div class="container-xl pt-5">
@@ -27,7 +27,10 @@
         </div>
       </div>
     </div>
+<div class="row" style="padding: 40px;">
+      <circle-progress :percent="40" />
 
+</div>
     <div class="row">
       <div v-for="(unit, index) in unitList" :key="index" class="col-lg-4wsd col-sm-6 col-12  mb-3">
         <div class="bgGray card rounded-3 text-white p-3 position-relative" :id="unit.id + '_unit'">
@@ -54,27 +57,81 @@
             <div class="row">
               <div class="col-lg-4 col-6 mb-3 ">
                 <div class="d-flex justify-content-center mb-3">
-                  <circle-progress :percent="(unit.latest_log.cpu_usage)" size="120" border-width="10"
-                    border-bg-width="10" show-percent="true" empty-color="#909090" :is-gradient="true"
-                    :gradient="unit.latest_log.cpu_usage > 75 ? { angle: 180, startColor: '#ffc107', stopColor: '#dc3545' } : (unit.latest_log.cpu_usage > 50 ? { angle: 90, startColor: '#198754', stopColor: '#ffc107' } : { angle: 90, startColor: '#198754', stopColor: '#ffc107' })" />
+
+                  <!-- <circle-progress 
+                    :percent="20" 
+                    size="120" 
+                    border-width="10"
+                    border-bg-width="10"
+                    show-percent="true"
+                    empty-color="#909090" 
+                    :is-gradient="true"
+                    :gradient="unit.latest_log.cpu_usage > 75 ? { angle: 180, startColor: '#ffc107', stopColor: '#dc3545' } : (unit.latest_log.cpu_usage > 50 ? { angle: 90, startColor: '#198754', stopColor: '#ffc107' } : { angle: 90, startColor: '#198754', stopColor: '#ffc107' })" /> -->
+                  <RadialProgress 
+                  :completedSteps="unit.latest_log.cpu_usage"
+                  :totalSteps="100"
+                  :diameter="140"
+                  :strokeLinecap="'round'"
+                  :animateSpeed="100"
+                  :strokeWidth="10"
+                  :innerStrokeWidth="10"
+                  :startColor="unit.latest_log.cpu_usage > 75 ? '#dc3545' : unit.latest_log.cpu_usage > 50 ? '#ffc107':'#ffc107'"
+                  :stopColor="unit.latest_log.cpu_usage > 75 ? '#ffc107' : unit.latest_log.cpu_usage > 50 ? '#198754':'#198754'"
+                  :isClockwise="true"
+                >
+                  <div style="text-align: center;">
+                    {{ unit.latest_log.cpu_usage }}%
+                    <br>CPU Usage
+                  </div>
+                </RadialProgress>
                 </div>
-                <div class="fw-bold text-center">CPU Usage</div>
+                <div class="fw-bold text-center"></div>
               </div>
               <div class="col-lg-4 col-6 mb-3 ">
                 <div class="d-flex justify-content-center mb-3">
-                  <circle-progress :percent="unit.latest_log.used_disk_percent" size="120" border-width="10"
-                    border-bg-width="10" show-percent="true" empty-color="#909090" :is-gradient="true"
-                    :gradient="unit.latest_log.used_disk_percent > 75 ? { angle: 180, startColor: '#ffc107', stopColor: '#dc3545' } : (unit.latest_log.used_disk_percent > 40 ? { angle: 90, startColor: '#198754', stopColor: '#ffc107' } : { angle: 90, startColor: '#198754', stopColor: '#ffc107' })" />
+                    <RadialProgress 
+                      :completedSteps="unit.latest_log.used_disk_percent"
+                      :totalSteps="100"
+                      :diameter="140"
+                      :strokeLinecap="'round'"
+                      :animateSpeed="100"
+                      :strokeWidth="10"
+                      :innerStrokeWidth="10"
+                      :startColor="unit.latest_log.used_disk_percent > 75 ? '#dc3545' : unit.latest_log.used_disk_percent > 50 ? '#ffc107':'#ffc107'"
+                      :stopColor="unit.latest_log.used_disk_percent > 75 ? '#ffc107' : unit.latest_log.used_disk_percent > 50 ? '#198754':'#198754'"
+                      :isClockwise="true"
+                    > 
+                    <div style="text-align: center;">
+                      {{ unit.latest_log.used_disk_percent }}%
+                      <br>DISK
+                    </div>
+                  </RadialProgress>
                 </div>
-                <div class="fw-bold text-center">DISK ({{ unit.latest_log.used_disk_percent }}%)</div>
               </div>
               <div class="col-lg-4 col-6 mb-3 ">
                 <div class="d-flex justify-content-center mb-3">
                   <circle-progress :percent="(unit.latest_log.used_ram / unit.latest_log.total_ram) * 100" size="120"
                     border-width="10" border-bg-width="10" show-percent="true" empty-color="#909090" :is-gradient="true"
                     :gradient="(unit.latest_log.used_ram / unit.latest_log.total_ram) * 100 > 75 ? { angle: 180, startColor: '#ffc107', stopColor: '#dc3545' } : ((unit.latest_log.used_ram / unit.latest_log.total_ram) * 100 > 40 ? { angle: 90, startColor: '#198754', stopColor: '#ffc107' } : { angle: 90, startColor: '#198754', stopColor: '#ffc107' })" />
+
+                    <RadialProgress 
+                      :completedSteps="(unit.latest_log.used_ram / unit.latest_log.total_ram) * 100"
+                      :totalSteps="100"
+                      :diameter="140"
+                      :strokeLinecap="'round'"
+                      :animateSpeed="100"
+                      :strokeWidth="10"
+                      :innerStrokeWidth="10"
+                      :startColor="(unit.latest_log.used_ram / unit.latest_log.total_ram) * 100 > 75 ? '#dc3545' : (unit.latest_log.used_ram / unit.latest_log.total_ram) * 100 > 50 ? '#ffc107':'#ffc107'"
+                      :stopColor="(unit.latest_log.used_ram / unit.latest_log.total_ram) * 100 > 75 ? '#ffc107' : (unit.latest_log.used_ram / unit.latest_log.total_ram) * 100 > 50 ? '#198754':'#198754'"
+                      :isClockwise="true"
+                    > 
+                    <div style="text-align: center;">
+                      {{ (unit.latest_log.used_ram +' of '+ unit.latest_log.total_ram) }}
+                      <br>Ram
+                    </div>
+                  </RadialProgress>
                 </div>
-                <div class="fw-bold text-center">RAM ({{ unit.latest_log.total_ram }})</div>
               </div>
             </div>
             <div class="Temperature">
@@ -252,12 +309,12 @@
 </template>
 
 <script>
-import "vue3-circle-progress/dist/circle-progress.css";
-import CircleProgress from "vue3-circle-progress";
+
+import RadialProgress from "vue3-radial-progress";
 
 export default {
   components: {
-    CircleProgress,
+    RadialProgress
   },
 
   data() {
@@ -271,7 +328,7 @@ export default {
       items: 10,
       tickets: 1000,
       unitList: [],
-
+      loaderFlage:false,
       APP_NATURE: null,
       IS_ACCESS_CONTROL_ROGER: null,
       ENABLE_MEMBERSHIPS: null,
@@ -323,7 +380,6 @@ export default {
         this.siteList.push(x)
       });
     }
-    // $(this.$refs.select).select2();
     this.getData();
     // this.intervalId = setInterval(this.getData, 10000);
     // this.intervals.push(this.intervalId);
@@ -350,6 +406,7 @@ export default {
       window.open(url, windowName, windowFeatures);
     },
     getData() {
+      this.loaderFlage=true;
       var site_id = this.site_id
       this.disabledDropDown = true;
       var data = {
@@ -358,12 +415,17 @@ export default {
       this.axios.get(this.DATA_URL, { params: data }).then((response) => {
         if (response.status == 200) {
           this.unitList = response.data.units
+          this.loaderFlage=false;
         }
         else {
+          this.loaderFlage=false;
           this.$swal.fire({ icon: 'error', title: 'Error', })
         }
       })
-        .catch((e) => { this.$swal.fire({ icon: 'error', title: 'Error', }) });
+        .catch((e) => { 
+          this.loaderFlage=false;
+          this.$swal.fire({ icon: 'error', title: 'Error', }) 
+        });
     },
     changeSiteId(val) {
       // clearInterval(this.intervalId);
